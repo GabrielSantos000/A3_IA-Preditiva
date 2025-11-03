@@ -1,0 +1,2 @@
+O arquivo 'datasets_ons.py' é a versão antiga do 'datasets_ons1.py', no qual esse baixar automaticamente através da URL do API todos os datasets do site da ONS de uma tema(id) específico.
+Esse é um projeto
