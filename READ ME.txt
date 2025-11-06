@@ -1,2 +1,19 @@
 O arquivo 'datasets_ons.py' é a versão antiga do 'datasets_ons1.py', no qual esse baixar automaticamente através da URL do API todos os datasets do site da ONS de uma tema(id) específico.
-Esse é um projeto
+Etapas de processamento:
+
+Eliminar tod
+
+'datasets - Balanco_Dessem_Detalhe-2025-05-23.parquet':
+Eliminar as seguintes colunas:
+val_ger_fotovoltaica 
+val_ger_mmgd 
+val_cons_elevatoria
+
+Converter os formatos de dados das colunas:
+din_programacaodia -> datatime
+val_demanda -> float
+val_ger_hidraulica  -> float
+val_ger_pch -> float
+val_ger_termica -> float
+val_ger_pct -> float
+val_ger_eolica -> float
