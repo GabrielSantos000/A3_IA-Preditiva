@@ -1,4 +1,8 @@
 O arquivo 'datasets_ons.py' é a versão antiga do 'datasets_ons1.py', no qual esse baixar automaticamente através da URL do API todos os datasets do site da ONS de uma tema(id) específico.
+
+Colunas do dataset Balanco_Dessem_Detalhe:
+
+
 Etapas de processamento:
 
 Eliminar tod
@@ -11,9 +15,55 @@ val_cons_elevatoria
 
 Converter os formatos de dados das colunas:
 din_programacaodia -> datatime
+num_patamar -> Int32 (correto)
+cod_subsistema -> string[python] (correto)
 val_demanda -> float
 val_ger_hidraulica  -> float
 val_ger_pch -> float
 val_ger_termica -> float
 val_ger_pct -> float
 val_ger_eolica -> float
+
+Nesse bloco:
+#Renomar o arquivo
+    dfParquet = os.path.splitext(f'{dataset_csv}')[0]+'.parquet'
+
+Foi usado o splitext, que separa o nome do arquivo da extensão dele e salva isso como tupla. Por exemplo:
+
+'nome_do.arquivo.csv' --> ('nome_do.arquivo' , '.csv')
+
+O delimitador dele é o ponto, mas é último ponto depois da última barra (\ ou //), que justamente o que representa a parte da extensão.
+
+----------
+Datasets com dados hidrologicos
+Colunas que serão excluídas:
+
+col_exc = ['nom_bacia',
+'nom_ree',
+'nom_reservatorio',
+'num_ordemcs',
+'cod_usina',
+'val_niveljusante',
+'val_vazaoartificial',
+'val_vazaooutrasestruturas',
+'val_vazaotransferida',
+'id_reservatorio',
+'val_vazaousoconsuntivo',
+'val_vazaoevaporacaoliquida']  
+
+# Colunas para converter em valores em tipo real (float)
+col_float = ['val_nivelmontante',
+'val_volumeutilcon',
+'val_vazaoafluente',
+'val_vazaoturbinada',
+'val_vazaovertida',
+'val_vazaodefluente',
+'val_vazaonatural',
+'val_vazaoincremental']
+
+# Colunas para converte em tipo texto (string)
+col_str = ['id_subsistema', 'nom_subsistema','tip_reservatorio']
+
+Nesses datasets, a escolha por manter o tipo de tip_reservatorio == "reservatório com usina" é devido ao fato do outro tipo (fio dagua) apresenta valores NaN na coluna val_volumeutilcon, cujo essa é muito importante para a previsão.
+
+Além disso, a coluna val_vazaoincremental apresenta 25% dos valores igual a NaN. Isso prejudíca a análise da AI criando ruídos e falta de precisão nos valores. Assim, foi calculado a mediana dos outros valores para substituir esse valor (Não foi calculado a média, pois essa couna apresenta valores muitos variados e extremos(outliers))

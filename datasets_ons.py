@@ -3,9 +3,8 @@ import os
 import pandas as pd
 from io import BytesIO
 
-def unificador_datasets(API_url):
-    dfs = []
-    # Buscar lista de arquivos
+def baixar_datasets(API_url):
+    # Buscar lista de recursos (arquivos)
     resp = requests.get(API_url)
     data = resp.json()
     resources = data["result"]["resources"]
@@ -25,16 +24,11 @@ def unificador_datasets(API_url):
 
         # Lê diretamente em memória
         df = pd.read_parquet(BytesIO(r.content))
-        dfs.append(df)
+        # Salvar o consolidado
+        output_file = os.path.join('datasets - parquet', f'datasets - {name}.parquet')
+        df.to_parquet(output_file, index= False)
 
-    # Juntar todos em um único DataFrame
-    df_final = pd.concat(dfs, ignore_index=True)
-
-    # Salvar o consolidado
-    output_file = os.path.join('datasets unifcados',f'datasets {name}.parquet')
-    df_final.to_parquet(output_file, compression="snappy")
-
-    return df_final
+    return df
 
 ID_ONS = ['carga-energia',
             'curva-carga',
@@ -48,8 +42,7 @@ url_carga_energia = "https://dados.ons.org.br/api/3/action/package_show?id=carga
 url_curva_energia = "https://dados.ons.org.br/api/3/action/package_show?id=curva-carga"
 url_dessem_detalhe = "https://dados.ons.org.br/api/3/action/package_show?id=balanco_dessem_detalhe"
 
-df_dadosHidro = unificador_datasets(url_dados_hidro)
-# df_cargaEnergia = unificador_datasets(url_carga_energia)
-# df_curvaEnergia = unificador_datasets(url_curva_energia)
-# df_dessemDetalhado = unificador_datasets(url_dessem_detalhe)
-
+# df_dadosHidro = baixar_datasets(url_dados_hidro)
+df_cargaEnergia = baixar_datasets(url_carga_energia)
+df_curvaEnergia = baixar_datasets(url_curva_energia)
+df_dessemDetalhado = baixar_datasets(url_dessem_detalhe)
