@@ -1,49 +1,43 @@
 import pandas as pd
+import os
 
-df = pd.read_parquet('datasets - parquet\datasets - Dados_Hidrologicos_Res-2018.parquet')
+data = 'datasets - parquet\DB\dfNE - Balanco_Dessem_Unificado.parquet'
+df = pd.read_parquet(f'{data}', engine='pyarrow')
 
-# Colunas para excluir
-col_exc = ['nom_bacia',
-'nom_ree',
-'nom_reservatorio',
-'num_ordemcs',
-'cod_usina',
-'val_niveljusante',
-'val_vazaoartificial',
-'val_vazaooutrasestruturas',
-'val_vazaotransferida',
-'id_reservatorio',
-'val_vazaousoconsuntivo',
-'val_vazaoevaporacaoliquida'] 
+print(df.isnull().sum())
 
-# Colunas para converter em valores em tipo real (float)
-col_float = ['val_nivelmontante',
-'val_volumeutilcon',
-'val_vazaoafluente',
-'val_vazaoturbinada',
-'val_vazaovertida',
-'val_vazaodefluente',
-'val_vazaonatural',
-'val_vazaoincremental']
+# # print(df.isna().sum())
+# # print(df.dtypes)
 
-# Colunas para converte em tipo texto (string)
-col_str = ['id_subsistema', 'nom_subsistema','tip_reservatorio']
+# col_exc = ['Data', 'DataVersao']
+# col_str = ['Sistema', 'Regiao', 'Classe', 'TipoConsumidor']
 
- # Conversão para os tipos de dados corretos
-df[col_float] = df[col_float].apply(pd.to_numeric, errors='coerce') # Para real
-df[col_str] = df[col_str].convert_dtypes()
+# # Exclusão das colunas que apresentam valores NA ou que são desncessários
+# #dfAlt = df.drop(columns= col_exc, axis=1)
 
-# Exclusão das colunas desnecessárias para a previsão
-df = df.drop(columns = col_exc, axis=1)
+# # Conversão para os tipos de dados corretos ----------------------
 
-# Calcula a mediana da coluna de vazão incremental e substituir os NaN por ela.
-mediana = df["val_vazaoincremental"].median()
-df["val_vazaoincremental"].fillna(mediana, inplace=True)
+# #Correção na formatação dos valores
+# df['Consumo'] = (df['Consumo'].astype(str)
+#     .str.replace('.', '', regex=False)      # remove separador de milhar
+#     .str.replace(',', '.', regex=False)     # troca vírgula por ponto
+# )
 
-# Filtrar só a região nordeste e do tipo de reservatório com usina
-df_ne = df[df['id_subsistema'] == 'NE']  
-df_res = df_ne[df_ne['tip_reservatorio'] == 'Reservatório com Usina']
+# df['Consumo'] = pd.to_numeric(df['Consumo'], errors='coerce') # Para real
+# df['DataExcel'] = pd.to_datetime(df['DataExcel'], errors='coerce') # Para data
+# df[col_str] = df[col_str].convert_dtypes()
 
+# #dfAlt = dfAlt.dropna(subset=['Consumo'], how='any')
 
-print(df_res['val_vazaoincremental'].isna())
-print(df['val_vazaoincremental'].isna())
+# # Filtrar só a região nordeste
+# dfNE = df[df['Regiao'] == 'Nordeste']
+# # print(dfNE.dtypes)
+
+# # Converter o arquivo
+# nome = os.path.basename(f'{data}')
+# dfNE.to_parquet(f'datasets - parquet\DB\dfNE - {nome}', engine='pyarrow', index=True)
+# print('Arquivo Salvo')
+
+# # print(dfNE)
+# # print(dfNE.dtypes)
+# # print(dfNE.isna().sum())

@@ -1,6 +1,8 @@
 import pandas as pd
 import os
 
+lista = os.path('datasets - parquet\DB')
+print(lista)
 # Caminho dos datasets 
 pathData = 'datasets - parquet\DB\DB-NE'
 os.makedirs(f'{pathData}', exist_ok=True)
@@ -37,9 +39,18 @@ for data in listaDatasets:
 
 # ---------------- Unificação dos datasets Banlanço DESSEM ----------------
 
-# Salvar na pasta de dataframe processados e unificados
-# df_final = pd.concat(listaDatasets, ignore_index=True)
+lista = os.listdir('datasets - parquet\DB')
 
-# df_final.to_parquet(f'datasets - parquet\DB\df_BalançoDessem_Unificado', index=False)
-# print('Dataframe unificado e salvo na pasta DB')
+unidata = []
+for data in lista:
+    if data.startswith('dfNE - Balanco'):
+        df = pd.read_parquet(f'datasets - parquet\DB\{data}')
+        unidata.append(df)
+
+dfFinal = pd.concat(unidata, ignore_index=True)
+
+dfFinal.to_parquet(f'datasets - parquet\DB\dfNE - Balanco_Dessem_Unificado.parquet', engine='pyarrow', index=True)
+print('Arquivo Salvo')
+
+print(dfFinal)
 

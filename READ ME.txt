@@ -2,10 +2,7 @@ O arquivo 'datasets_ons.py' é a versão antiga do 'datasets_ons1.py', no qual e
 
 Colunas do dataset Balanco_Dessem_Detalhe:
 
-
 Etapas de processamento:
-
-Eliminar tod
 
 'datasets - Balanco_Dessem_Detalhe-2025-05-23.parquet':
 Eliminar as seguintes colunas:
@@ -33,6 +30,8 @@ Foi usado o splitext, que separa o nome do arquivo da extensão dele e salva iss
 'nome_do.arquivo.csv' --> ('nome_do.arquivo' , '.csv')
 
 O delimitador dele é o ponto, mas é último ponto depois da última barra (\ ou //), que justamente o que representa a parte da extensão.
+
+Alterações, achei melhor usar o basename() e salvar o arquivo em uma pasta diferente.
 
 ----------
 Datasets com dados hidrologicos
@@ -67,3 +66,17 @@ col_str = ['id_subsistema', 'nom_subsistema','tip_reservatorio']
 Nesses datasets, a escolha por manter o tipo de tip_reservatorio == "reservatório com usina" é devido ao fato do outro tipo (fio dagua) apresenta valores NaN na coluna val_volumeutilcon, cujo essa é muito importante para a previsão.
 
 Além disso, a coluna val_vazaoincremental apresenta 25% dos valores igual a NaN. Isso prejudíca a análise da AI criando ruídos e falta de precisão nos valores. Assim, foi calculado a mediana dos outros valores para substituir esse valor (Não foi calculado a média, pois essa couna apresenta valores muitos variados e extremos(outliers))
+==============================
+Datasets: SETOR_INDUSTRIAL_POR_RG
+
+Colunas para remover:
+
+col_exc = [
+    'Data',
+    'DataVersao'
+]
+
+Filtrar só para a Região Nordeste
+Converte para o formato data: DataExcel
+Converter para float: Consumo
+Converter para string: col_str = ['SetorIndustrial','Regiao']
