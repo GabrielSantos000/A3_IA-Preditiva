@@ -2,8 +2,8 @@ import pandas as pd
 import os
 
 # Caminho dos datasets 
-pathData = 'datasets - parquet\DB\DB-NE'
-os.makedirs(f'{pathData}', exist_ok=True)
+# pathData = 'datasets - parquet\DB\DB-NE'
+# os.makedirs(f'{pathData}', exist_ok=True)
 
 # Listagens dos datasets
 listaDatasets = os.listdir('datasets - parquet')
@@ -22,9 +22,9 @@ for data in listaDatasets:
         df_nordeste = df[df['id_subsistema'] == 'NE']
 
         # Renomar arquivo
-        data_NE = data.replace('datasets','dfNE')
+        # data_NE = data.replace('datasets','dfNE')
 
-        # Salvar na pasta de dataframe processados
-        df_nordeste.to_parquet(f'{pathData}\{data_NE}', index=False)
-        print(f'{data_NE} salvo na pasta DB-NE')
+        # # Salvar na pasta de dataframe processados
+        # df_nordeste.to_parquet(f'{pathData}\{data_NE}', index=False)
+        # print(f'{data_NE} salvo na pasta DB-NE')
 

@@ -80,3 +80,40 @@ Filtrar só para a Região Nordeste
 Converte para o formato data: DataExcel
 Converter para float: Consumo
 Converter para string: col_str = ['SetorIndustrial','Regiao']
+
+Utilizei o método fillna() para preencher os valores NaN na coluna val_vazaoturbinada no dataset dos dados hidrológicos.
+
+df['Consumo'] = (
+    df['Consumo']
+    .astype(str)
+    .str.replace('.', '', regex=False)      # remove separador de milhar
+    .str.replace(',', '.', regex=False)     # troca vírgula por ponto
+)
+
+Função usada para remover os pontos dos valores e manter apenas o último ponto.
+
+def limpar_pontos(valor):
+    valor = str(valor)
+
+    # Se não houver ponto ou houver apenas um, não precisa mexer
+    if valor.count('.') <= 1:
+        return valor
+
+    # Se houver vários pontos:
+    ## dividir em partes
+    partes = valor.split('.')
+    
+    ## manter a última parte (decimal)
+    decimal = partes[-1]
+    
+    ## juntar todas as partes anteriores sem ponto
+    inteiro = ''.join(partes[:-1])
+
+    return inteiro + "." + decimal
+
+df["Consumo"] = df["Consumo"].apply(limpar_pontos)
+df["Consumo"] = df["Consumo"].astype(float)
+
+----------------- NORMALIZAÇÃO DOS DADOS ------------------------------
+Nessa etapa utilizei o MinMaxScaler que transforma os valores para o intervalo padrão [0, 1].
+Xnorm ​= (​X−Xmin​​)/(Xmax​−Xmin)

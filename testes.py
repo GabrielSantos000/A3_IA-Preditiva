@@ -1,43 +1,65 @@
 import pandas as pd
 import os
 
-data = 'datasets - parquet\DB\dfNE - Balanco_Dessem_Unificado.parquet'
-df = pd.read_parquet(f'{data}', engine='pyarrow')
+# data = "datasets - parquet\datasets originais\DB-processando\CONSUMO_E_NUMCONS_SAM_UF.parquet"
 
-print(df.isnull().sum())
+# df = pd.read_parquet(f'{data}', engine='pyarrow')
 
-# # print(df.isna().sum())
-# # print(df.dtypes)
+# col_str = ['UF','Regiao', 'Sistema', 'Classe', 'TipoConsumidor']
+# col_exc = ['Data','DataVersao']
 
-# col_exc = ['Data', 'DataVersao']
-# col_str = ['Sistema', 'Regiao', 'Classe', 'TipoConsumidor']
-
-# # Exclusão das colunas que apresentam valores NA ou que são desncessários
-# #dfAlt = df.drop(columns= col_exc, axis=1)
-
-# # Conversão para os tipos de dados corretos ----------------------
-
-# #Correção na formatação dos valores
-# df['Consumo'] = (df['Consumo'].astype(str)
-#     .str.replace('.', '', regex=False)      # remove separador de milhar
-#     .str.replace(',', '.', regex=False)     # troca vírgula por ponto
-# )
-
-# df['Consumo'] = pd.to_numeric(df['Consumo'], errors='coerce') # Para real
-# df['DataExcel'] = pd.to_datetime(df['DataExcel'], errors='coerce') # Para data
 # df[col_str] = df[col_str].convert_dtypes()
+# df['DataExcel'] = pd.to_datetime(df['DataExcel'], errors='coerce')
+# # df['Consumo'] = pd.to_numeric(df['Consumo'], errors='coerce')
 
-# #dfAlt = dfAlt.dropna(subset=['Consumo'], how='any')
+# # df["Consumo"] = (
+# #     df["Consumo"]
+# #     .astype(str).str.replace(".", "", regex=False)
+# #     .astype("float64")
+# # )
 
-# # Filtrar só a região nordeste
-# dfNE = df[df['Regiao'] == 'Nordeste']
-# # print(dfNE.dtypes)
+# def limpar_pontos(valor):
+#     valor = str(valor)
 
-# # Converter o arquivo
-# nome = os.path.basename(f'{data}')
-# dfNE.to_parquet(f'datasets - parquet\DB\dfNE - {nome}', engine='pyarrow', index=True)
+#     # Se não houver ponto ou houver apenas um, não precisa mexer
+#     if valor.count('.') <= 1:
+#         return valor
+
+#     # Se houver vários pontos:
+#     ## dividir em partes
+#     partes = valor.split('.')
+    
+#     ## manter a última parte (decimal)
+#     decimal = partes[-1]
+    
+#     ## juntar todas as partes anteriores sem ponto
+#     inteiro = ''.join(partes[:-1])
+
+#     return inteiro + "." + decimal
+
+# df["Consumo"] = df["Consumo"].apply(limpar_pontos)
+# df["Consumo"] = df["Consumo"].astype(float)
+
+# df2 = df.drop(columns=col_exc, axis=1)
+
+# print(df2.isna().sum())
+# print(df2.dtypes)
+# print(df2)
+
+# # # # df1 = df.dropna()
+
+# # # # # # print(pd.notna(df1).sum())
+
+# df2.to_parquet('datasets - parquet\datasets_tratados_unificados\dfNE - CONSUMO_E_NUMCONS_SAM_UF.parquet', engine='pyarrow', index=True)
 # print('Arquivo Salvo')
 
-# # print(dfNE)
-# # print(dfNE.dtypes)
-# # print(dfNE.isna().sum())
+lista = os.listdir('datasets - parquet\datasets_tratados_unificados')
+
+for data in lista:
+
+    path = f'datasets - parquet\datasets_tratados_unificados\{data}'
+    df = pd.read_parquet(path, engine='pyarrow')
+    
+    print(data)
+    print(df)
+    print(df.dtypes)

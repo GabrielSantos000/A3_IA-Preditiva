@@ -24,11 +24,11 @@ def toCsv(dataset_parquet):
     df = pd.read_parquet(f'{dataset_parquet}', engine='pyarrow')
 
     #Renomar o arquivo
-    dfcsv = os.path.basename(data)+'.csv'
+    dfcsv = os.path.basename(path)+'.csv'
     
     # Converter o arquivo
     df.to_csv(f'{path}\{dfcsv}', sep=';', encoding='latin1',index=True)
     return dfcsv, 'Arquivo salvo com sucesso'
 
-toParquet('testes\CONSUMO_E_NUMCONS_SAM_UF.parquet.csv')
-toParquet('testes\CONSUMO_E_NUMCONS_SAM.parquet.csv')
+toParquet('datasets - parquet\datasets para conversão\CONSUMO_E_NUMCONS_SAM_UF.csv')
+#toCsv("datasets - parquet\DB\dfNE - CurvaCarga_Unificado.parquet")
