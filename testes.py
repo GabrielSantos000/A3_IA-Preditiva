@@ -1,9 +1,45 @@
 import pandas as pd
 import os
+import matplotlib.pyplot as plt
+import numpy as np
 
-# data = "datasets - parquet\datasets originais\DB-processando\CONSUMO_E_NUMCONS_SAM_UF.parquet"
+#data = "datasets - parquet\datasets_tratados_unificados\dfNE - SETOR_INDUSTRIAL_POR_UF.parquet"
 
 # df = pd.read_parquet(f'{data}', engine='pyarrow')
+
+# def grafico(df, figsize=(10,5), salvar=True, prefixo="gráfcio -"):
+#     """
+#     Gera gráficos de dispersão para todas as colunas numéricas de um dataset.
+#     Cada gráfico mostra: índice (x) vs valor da coluna (y).
+
+#     Parâmetros:
+#         df (pd.DataFrame): dataset de entrada
+#         figsize (tuple): tamanho da figura
+#         salvar (bool): salvar imagens em PNG
+#         prefixo (str): prefixo dos arquivos
+#     """
+#     col_num = df.select_dtypes(include='number').columns
+
+#     for col in col_num:
+#         plt.figure(figsize=figsize)
+#         plt.scatter(df.index, df[col])
+#         plt.title(f"Gráfico de Dispersão — {col}")
+#         plt.xlabel("Índice")
+#         plt.ylabel(col)
+
+#         if salvar:
+#             plt.savefig(f"{prefixo}{col}.png", dpi=200)
+        
+#         plt.show()
+
+lista = os.listdir('datasets - parquet\datasets_tratados_unificados')
+
+for data in lista:
+
+    path = f'datasets - parquet\datasets_tratados_unificados\{data}'
+    df = pd.read_parquet(path, engine='pyarrow')
+    #grafico(df)
+
 
 # col_str = ['UF','Regiao', 'Sistema', 'Classe', 'TipoConsumidor']
 # col_exc = ['Data','DataVersao']
@@ -52,13 +88,6 @@ import os
 
 # df2.to_parquet('datasets - parquet\datasets_tratados_unificados\dfNE - CONSUMO_E_NUMCONS_SAM_UF.parquet', engine='pyarrow', index=True)
 # print('Arquivo Salvo')
-
-lista = os.listdir('datasets - parquet\datasets_tratados_unificados')
-
-for data in lista:
-
-    path = f'datasets - parquet\datasets_tratados_unificados\{data}'
-    df = pd.read_parquet(path, engine='pyarrow')
     
     print(data)
     print(df)

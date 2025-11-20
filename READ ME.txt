@@ -115,5 +115,30 @@ df["Consumo"] = df["Consumo"].apply(limpar_pontos)
 df["Consumo"] = df["Consumo"].astype(float)
 
 ----------------- NORMALIZAÇÃO DOS DADOS ------------------------------
-Nessa etapa utilizei o MinMaxScaler que transforma os valores para o intervalo padrão [0, 1].
-Xnorm ​= (​X−Xmin​​)/(Xmax​−Xmin)
+
+Função que mostra gráficos de dispersão de cada coluna numérica para a melhor visualização de outliers.
+def grafico(df, figsize=(10,5), salvar=False, prefixo="scatter_"):
+    """
+    Gera gráficos de dispersão para todas as colunas numéricas de um dataset.
+    Cada gráfico mostra: índice (x) vs valor da coluna (y).
+
+    Parâmetros:
+        df (pd.DataFrame): dataset de entrada
+        figsize (tuple): tamanho da figura
+        salvar (bool): salvar imagens em PNG
+        prefixo (str): prefixo dos arquivos
+    """
+    col_num = df.select_dtypes(include='number').columns
+
+    for col in col_num:
+        plt.figure(figsize=figsize)
+        plt.scatter(df.index, df[col])
+        plt.title(f"Gráfico de Dispersão — {col}")
+        plt.xlabel("Índice")
+        plt.ylabel(col)
+
+        if salvar:
+            plt.savefig(f"{prefixo}{col}.png", dpi=200)
+        
+        plt.show()
+
